@@ -5,10 +5,11 @@
   },
 
   "globals": {
-      "HanabiUI": true,
       "constants": true,
-      "Kinetic": true,
+      "HanabiUI": true,
       "hex_sha256": true,
+      "Kinetic": true,
+      "Opentip": true,
       "TimerDisplay": true,
   },
 }

@@ -870,11 +870,22 @@ function HanabiUI(lobby, gameID) {
             }
         }
 
-        // Define event handlers
-        // Multiple handlers may set activeHover
+        /*
+            Define event handlers
+            Multiple handlers may set activeHover
+        */
 
-        this.on('mousemove', () => {
+        this.on('mousemove', (event) => {
             if (self.noteGiven.visible()) {
+                const note = notes[self.order];
+                /*
+                note.offset([
+                    event.offsetX,
+                    event.offsetY,
+                ]);
+                */
+                note.show();
+                /*
                 const mousePos = stage.getPointerPosition();
                 self.tooltip.setX(mousePos.x + 15);
                 self.tooltip.setY(mousePos.y + 5);
@@ -884,13 +895,19 @@ function HanabiUI(lobby, gameID) {
                 self.notePulse.reset();
 
                 tipLayer.draw();
+                */
             }
             ui.activeHover = this;
         });
 
         this.on('mouseout', () => {
+            const note = notes[self.order];
+            note.hide();
+            console.log(`hiding ${self.order}`);
+            /*
             self.tooltip.hide();
             tipLayer.draw();
+            */
         });
 
         this.on('mousemove tap', () => {
@@ -5442,3 +5459,19 @@ HanabiUI.prototype.sendMsg = function sendMsg(msg) {
     }
     this.backend.emit('message', msg);
 };
+
+const notes = [];
+$(document).ready(() => {
+    for (let i = 0; i < 60; i++) {
+        $('#notes').append(`<span id="note${i}"></span>`);
+        const tooltip = new Opentip(`#note${i}`, 'The borders and stems are drawn perfectly, and the shadows do not rely on CSS3.', {
+            // borderWidth: 5,
+            // fixed: true,
+            // stemLength: 18,
+            // stemBase: 20,
+            showOn: null, // Showing and hiding the tooltip will be manually managed
+            // borderColor: '#317CC5',
+        });
+        notes.push(tooltip);
+    }
+});
