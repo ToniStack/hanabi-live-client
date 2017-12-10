@@ -55,6 +55,9 @@ function HanabiUI(lobby, gameID) {
     this.activeClockIndex = null;
     this.lastSpectators = null;
 
+    // Whether or not to show the timer, set at game init
+    this.showTimer = null;
+
     // This below code block deals with automatic resizing
     // Start listening to resize events and draw canvas.
     window.addEventListener('resize', resizeCanvas, false);
@@ -3817,9 +3820,7 @@ function HanabiUI(lobby, gameID) {
 
         this.stopLocalTimer();
 
-        // We don't want the timer to show in replays
-        const showTimer = !this.replayOnly && (ui.timedGame || !lobby.hideTimerInUntimed);
-        if (showTimer) {
+        if (this.showTimer) {
             const timerY = 0.592;
 
             timer1 = new TimerDisplay({
@@ -5371,6 +5372,8 @@ HanabiUI.prototype.handleMessage = function handleMessage(msg) {
         this.timedGame = msgData.timed;
         this.sharedReplay = msgData.sharedReplay;
         this.reorderCards = msgData.reorderCards;
+
+        this.showTimer = !this.replayOnly && (this.timedGame || !this.lobby.hideTimerInUntimed);
 
         if (this.replayOnly) {
             this.replayTurn = -1;
