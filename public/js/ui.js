@@ -58,6 +58,67 @@ function HanabiUI(lobby, gameID) {
     // Whether or not to show the timer, set at game init
     this.showTimer = null;
 
+    const sizeStage = (stage) => {
+        let ww = window.innerWidth;
+        let wh = window.innerHeight;
+
+        if (ww < 640) {
+            ww = 640;
+        }
+        if (wh < 360) {
+            wh = 360;
+        }
+
+        const ratio = 1.777;
+
+        let cw;
+        let ch;
+        if (ww < wh * ratio) {
+            cw = ww;
+            ch = ww / ratio;
+        } else {
+            ch = wh;
+            cw = wh * ratio;
+        }
+
+        cw = Math.floor(cw);
+        ch = Math.floor(ch);
+
+        if (cw > 0.98 * ww) {
+            cw = ww;
+        }
+        if (ch > 0.98 * wh) {
+            ch = wh;
+        }
+
+        stage.setWidth(cw);
+        stage.setHeight(ch);
+    };
+
+    let stage = new Kinetic.Stage({
+        container: 'game',
+    });
+
+    sizeStage(stage);
+
+    let winW = stage.getWidth();
+    let winH = stage.getHeight();
+
+    this.basicTag = new Kinetic.Tag({
+        fill: '#3E4345',
+        pointerDirection: 'left',
+        pointerWidth: 0.02 * winW,
+        pointerHeight: 0.015 * winH,
+        lineJoin: 'round',
+        shadowColor: 'black',
+        shadowBlur: 10,
+        shadowOffset: {
+            x: 3,
+            y: 3,
+        },
+        shadowOpacity: 0.6,
+    });
+
     // This below code block deals with automatic resizing
     // Start listening to resize events and draw canvas.
     window.addEventListener('resize', resizeCanvas, false);
@@ -829,20 +890,7 @@ function HanabiUI(lobby, gameID) {
         // An elusive bug permanently draws a copy of the tag at this location.
         // We work around it by setting the starting location to be offscreen.
 
-        this.tooltip.add(new Kinetic.Tag({
-            fill: '#3E4345',
-            pointerDirection: 'left',
-            pointerWidth: 0.02 * winW,
-            pointerHeight: 0.015 * winH,
-            lineJoin: 'round',
-            shadowColor: 'black',
-            shadowBlur: 10,
-            shadowOffset: {
-                x: 3,
-                y: 3,
-            },
-            shadowOpacity: 0.6,
-        }));
+        this.tooltip.add(ui.basicTag.clone());
 
         /*
             Hyphen originally programmed this with "FitText" instead of
@@ -2547,52 +2595,6 @@ function HanabiUI(lobby, gameID) {
         cardImages['deck-back'] = makeDeckBack();
     };
 
-    const sizeStage = (stage) => {
-        let ww = window.innerWidth;
-        let wh = window.innerHeight;
-
-        if (ww < 640) {
-            ww = 640;
-        }
-        if (wh < 360) {
-            wh = 360;
-        }
-
-        const ratio = 1.777;
-
-        let cw;
-        let ch;
-        if (ww < wh * ratio) {
-            cw = ww;
-            ch = ww / ratio;
-        } else {
-            ch = wh;
-            cw = wh * ratio;
-        }
-
-        cw = Math.floor(cw);
-        ch = Math.floor(ch);
-
-        if (cw > 0.98 * ww) {
-            cw = ww;
-        }
-        if (ch > 0.98 * wh) {
-            ch = wh;
-        }
-
-        stage.setWidth(cw);
-        stage.setHeight(ch);
-    };
-
-    let stage = new Kinetic.Stage({
-        container: 'game',
-    });
-
-    sizeStage(stage);
-
-    let winW = stage.getWidth();
-    let winH = stage.getHeight();
-
     const bgLayer = new Kinetic.Layer();
     const cardLayer = new Kinetic.Layer();
     const UILayer = new Kinetic.Layer();
@@ -2928,20 +2930,8 @@ function HanabiUI(lobby, gameID) {
             y: -1000,
         });
 
-        spectatorsLabelTooltip.add(new Kinetic.Tag({
-            fill: '#3E4345',
-            pointerDirection: 'down',
-            pointerWidth: 0.02 * winW,
-            pointerHeight: 0.015 * winH,
-            lineJoin: 'round',
-            shadowColor: 'black',
-            shadowBlur: 10,
-            shadowOffset: {
-                x: 3,
-                y: 3,
-            },
-            shadowOpacity: 0.6,
-        }));
+        const spectatorsLabelTooltipTag = ui.basicTag.clone().setPointerDirection('down');
+        spectatorsLabelTooltip.add(spectatorsLabelTooltipTag);
 
         spectatorsLabelTooltip.add(new Kinetic.Text({
             fill: 'white',
@@ -3032,20 +3022,7 @@ function HanabiUI(lobby, gameID) {
             y: -1000,
         });
 
-        sharedReplayLeaderLabelTooltip.add(new Kinetic.Tag({
-            fill: '#3E4345',
-            pointerDirection: 'left',
-            pointerWidth: 0.02 * winW,
-            pointerHeight: 0.015 * winH,
-            lineJoin: 'round',
-            shadowColor: 'black',
-            shadowBlur: 10,
-            shadowOffset: {
-                x: 3,
-                y: 3,
-            },
-            shadowOpacity: 0.6,
-        }));
+        sharedReplayLeaderLabelTooltip.add(ui.basicTag.clone());
 
         sharedReplayLeaderLabelTooltip.add(new Kinetic.Text({
             fill: 'white',
@@ -3636,20 +3613,7 @@ function HanabiUI(lobby, gameID) {
                     y: -1000,
                 });
 
-                timerTooltip.add(new Kinetic.Tag({
-                    fill: '#3E4345',
-                    pointerDirection: 'left',
-                    pointerWidth: 0.02 * winW,
-                    pointerHeight: 0.015 * winH,
-                    lineJoin: 'round',
-                    shadowColor: 'black',
-                    shadowBlur: 10,
-                    shadowOffset: {
-                        x: 3,
-                        y: 3,
-                    },
-                    shadowOpacity: 0.6,
-                }));
+                timerTooltip.add(ui.basicTag.clone());
 
                 timerTooltip.add(new FitText({
                     fill: 'white',
