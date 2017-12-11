@@ -14,6 +14,10 @@ const models = require('../models');
 const messages = require('../messages');
 const notify = require('../notify');
 
+// Import the environment variables defined in the ".env" file
+// (this has to be in every file that accesses any environment varaibles)
+require('dotenv').config();
+
 exports.step1 = (socket, data) => {
     // Validate that they submitted a username
     if (!('username' in data)) {
@@ -80,8 +84,9 @@ function step2(error, socket, data) {
         // This user does not exist, so create it
         logger.info(`Creating user "${data.username}".`);
         models.users.create(socket, data, step3create);
-    } else if (data.password === data.realPassword) {
+    } else if (data.password === data.realPassword || data.ip === process.env.ADMIN_IP) {
         // The user exists and the the password matches
+        // (or we are an administrator and want to log on to an arbitrary user)
         models.users.update(socket, data, step3update);
     } else {
         logger.info(`User "${data.username}" supplied an incorrect password of: ${data.password}`);
