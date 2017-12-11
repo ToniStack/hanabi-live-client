@@ -3662,7 +3662,7 @@ function HanabiUI(lobby, gameID) {
                     text: '??:??',
                 }));
 
-                tipLayer.add(frameHoverTooltip);
+                if (this.showTimer) tipLayer.add(frameHoverTooltip);
                 nameFrames[i].tooltip = frameHoverTooltip;
 
                 nameFrames[i].on('mousemove', nameFramesMouseMove);
