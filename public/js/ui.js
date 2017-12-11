@@ -3631,12 +3631,12 @@ function HanabiUI(lobby, gameID) {
             // Draw the tooltips on the player names that show the time
             // (the code is copied from HanabiCard)
             if (!this.replayOnly) {
-                const frameHoverTooltip = new Kinetic.Label({
+                const timerTooltip = new Kinetic.Label({
                     x: -1000,
                     y: -1000,
                 });
 
-                frameHoverTooltip.add(new Kinetic.Tag({
+                timerTooltip.add(new Kinetic.Tag({
                     fill: '#3E4345',
                     pointerDirection: 'left',
                     pointerWidth: 0.02 * winW,
@@ -3651,7 +3651,7 @@ function HanabiUI(lobby, gameID) {
                     shadowOpacity: 0.6,
                 }));
 
-                frameHoverTooltip.add(new FitText({
+                timerTooltip.add(new FitText({
                     fill: 'white',
                     align: 'left',
                     padding: 0.01 * winH,
@@ -3662,8 +3662,8 @@ function HanabiUI(lobby, gameID) {
                     text: '??:??',
                 }));
 
-                if (this.showTimer) tipLayer.add(frameHoverTooltip);
-                nameFrames[i].tooltip = frameHoverTooltip;
+                if (this.showTimer) tipLayer.add(timerTooltip);
+                nameFrames[i].tooltip = timerTooltip;
 
                 nameFrames[i].on('mousemove', nameFramesMouseMove);
 
