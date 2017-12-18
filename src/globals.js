@@ -1,6 +1,6 @@
 // Server configuration
-const baseTimeMinutes = 5;
-const timePerTurnSeconds = 10;
+const baseTimeMinutes = 2;
+const timePerTurnSeconds = 20;
 const baseTimeDefault = baseTimeMinutes * 60 * 1000; // In milliseconds
 const timePerTurnDefault = timePerTurnSeconds * 1000; // In milliseconds
 
