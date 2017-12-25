@@ -3,3 +3,4 @@ exports.games = require('./models/games');
 exports.gameParticipants = require('./models/gameParticipants');
 exports.gameActions = require('./models/gameActions');
 exports.chatLog = require('./models/chatLog');
+exports.bannedIPs = require('./models/bannedIPs');

@@ -19,6 +19,31 @@ const notify = require('../notify');
 require('dotenv').config();
 
 exports.step1 = (socket, data) => {
+    // Get the IP of the client
+    // https://stackoverflow.com/questions/6458083/get-the-clients-ip-address-in-socket-io
+    data.ip = socket.handshake.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
+    // "socket.handshake.address.address" doesn't work
+    // "socket.conn.transport.socket._socket.remoteAddress" doesn't work
+    // "socket.request.connection.remoteAddress" gives a 10.X.X.X address on Heroku
+    // "x-forwarded-for" is added by Hoerku; note that it has to be in lowercase
+    // https://devcenter.heroku.com/articles/http-routing
+
+    // Check to see if their IP is banned
+    models.bannedIPs.check(socket, data, step15);
+}
+
+function step15(error, socket, data) {
+    if (error !== null) {
+        logger.error(`models.bannedIPs.check failed: ${error}`);
+        return;
+    }
+
+    if (data.banned) {
+        data.reason = 'You have been banned.';
+        notify.playerDenied(socket, data);
+        return;
+    }
+
     // Validate that they submitted a username
     if (!('username' in data)) {
         logger.warn('Someone tried to log in without submitting a username.');
@@ -70,15 +95,6 @@ function step2(error, socket, data) {
         logger.error(`models.users.getUser failed: ${error}`);
         return;
     }
-
-    // Get the IP of the client
-    // https://stackoverflow.com/questions/6458083/get-the-clients-ip-address-in-socket-io
-    data.ip = socket.handshake.headers['x-forwarded-for'] || socket.request.connection.remoteAddress;
-    // "socket.handshake.address.address" doesn't work
-    // "socket.conn.transport.socket._socket.remoteAddress" doesn't work
-    // "socket.request.connection.remoteAddress" gives a 10.X.X.X address on Heroku
-    // "x-forwarded-for" is added by Hoerku; note that it has to be in lowercase
-    // https://devcenter.heroku.com/articles/http-routing
 
     if (data.userID === null) {
         // This user does not exist, so create it
